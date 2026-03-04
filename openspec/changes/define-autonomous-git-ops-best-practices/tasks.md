@@ -16,6 +16,6 @@
 
 ## 4. Autonomous Publish/PR Application
 
-- [ ] 4.1 `git push` を非`main`ブランチに対して実行し、成功ログを確認する
-- [ ] 4.2 Push後にPull Requestを作成または更新し、実行した検証コマンドと結果を本文に記録する
-- [ ] 4.3 commit/pushタイミング規則（論理単位完了時commit、検証完了直後push）を spec に反映し、運用チェック観点を明文化する
+- [x] 4.1 `git push` を非`main`ブランチに対して実行し、成功ログを確認する
+- [x] 4.2 Push後にPull Requestを作成または更新し、実行した検証コマンドと結果を本文に記録する
+- [x] 4.3 commit/pushタイミング規則（論理単位完了時commit、検証完了直後push）を spec に反映し、運用チェック観点を明文化する
