@@ -1,29 +1,28 @@
-# Copilot Instructions for this repository
+# Copilot Instructions (OpenSpec-first)
 
-このリポジトリで実装・変更を始める前に、エージェントは必ず以下を先に確認すること。
+このリポジトリは **OpenSpecを正本** とする。仕様変更・設計・実装計画は `openspec/changes/**` のみで管理する。
 
-1. `openspec/config.yaml`
-2. 対象変更の OpenSpec artifacts（`proposal.md`, `design.md`, `tasks.md`, `specs/**/spec.md`）
+## 必須フロー（実装前）
 
-## Required flow
+1. 変更名を決める（不明なら `openspec list --json`）。
+2. `openspec status --change "<change-name>" --json`
+3. `openspec instructions apply --change "<change-name>" --json`
+4. 返却された `contextFiles` をすべて読む。
+5. ここまで完了後に実装を開始する。
 
-1. 変更名を特定する（不明なら `openspec list --json` で候補を確認）。
-2. `openspec status --change "<change-name>" --json` を実行して schema と tasks 状態を確認する。
-3. `openspec instructions apply --change "<change-name>" --json` を実行し、返却された `contextFiles` をすべて読む。
-4. 読了後にのみ実装を開始する。
+## OpenSpec編集時のルール
 
-## Notes
+- `openspec/` 配下の編集では、編集前に必ず上記コマンドを実行して結果を確認する。
+- 仕様の衝突時は OpenSpec artifacts（`openspec/specs/**/spec.md` と active change）を優先する。
+- `.copilot/plan.md` を作業ルートとして使わない。
 
-- OpenSpec artifact と実装が乖離している場合は、先に OpenSpec artifact を更新する。
-- 仕様が不明瞭な場合は実装を進めず、必要な確認を行う。
+## Python / Test 実行
 
-## Permission defaults
+- Pythonは3.12系を使用する。
+- pytestは以下で固定実行する:  
+  `PYTHONPATH=/Users/ryoma/Desktop/study/image uv run --project /Users/ryoma/Desktop/study/image --python 3.12 -- pytest`
 
-- Web検索（Web fetch）は常に許可する。
-- OpenSpec関連ファイル（`openspec/**`）の編集は常に許可する。
+## Git運用
 
-## Autonomous Git flow
-
-- 自律実装時は `main` へ直接 push せず、作業ブランチへ push する。
-- 関連テスト/検証が成功した場合のみ commit/push を行い、Pull Request を作成する。
-- Pull Request 本文には検証コマンドと結果を記載する。
+- `main` へ直接pushしない。PR経由で統合する。
+- 仕様変更は実装より先にOpenSpec artifactsを更新する。
