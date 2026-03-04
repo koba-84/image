@@ -53,6 +53,31 @@
 ```
 
 ```python
+!OPENAI_API_KEY=... uv run -- python -m image_ai.cli mode=text2img \
+  model_id=openai:gpt-image-1 \
+  prompt="minimal poster, high contrast, black and white" \
+  output=outputs/openai_text2img.png \
+  width=1024 height=1024
+```
+
+```python
+!GOOGLE_VERTEX_ACCESS_TOKEN=... GOOGLE_CLOUD_PROJECT=... GOOGLE_CLOUD_LOCATION=us-central1 \
+  uv run -- python -m image_ai.cli mode=text2img \
+  model_id=google:imagen-3.0-generate-002 \
+  prompt="paper cut style mountain landscape" \
+  output=outputs/google_text2img.png \
+  width=1024 height=1024
+```
+
+```python
+!IDEOGRAM_API_KEY=... uv run -- python -m image_ai.cli mode=text2img \
+  model_id=ideogram:v2 \
+  prompt="brand logo, minimal monoline, flat vector style" \
+  output=outputs/ideogram_text2img.png \
+  width=1024 height=1024
+```
+
+```python
 !uv run -- python -m image_ai.cli mode=img2img model=sd15 \
   prompt="anime style, clean lineart" \
   image=./inputs/base.png \

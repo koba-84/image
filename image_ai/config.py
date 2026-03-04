@@ -36,6 +36,7 @@ class RuntimeConfig:
     controlnet_model_id: str | None = None
     controlnet_conditioning_scale: float = 1.0
     controlnet_image: str | None = None
+    api_base_url: str | None = None
 
 
 def _validate_runtime_config(config: RuntimeConfig) -> None:
