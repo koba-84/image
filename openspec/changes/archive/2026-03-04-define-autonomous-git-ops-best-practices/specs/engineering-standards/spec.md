@@ -57,3 +57,8 @@ Autonomous contributors MUST integrate through reviewable PR flow and protected 
 - **WHEN** an autonomous branch push succeeds
 - **THEN** the agent MUST open or update a Pull Request for review before mainline integration
 - **AND** the PR body MUST include executed validation commands and outcomes
+
+#### Scenario: Agent records commit and push checkpoint evidence
+- **WHEN** an agent completes a logical work unit and publishes it
+- **THEN** the agent MUST leave traceable evidence of commit timing and push timing (for example command logs or PR timeline)
+- **AND** reviewers MUST be able to verify that commit occurred at logical boundary and push occurred immediately after required validation

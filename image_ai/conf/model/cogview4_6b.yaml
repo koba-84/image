@@ -6,4 +6,7 @@ guidance_scale: 3.5
 height: null
 width: null
 strength: 0.65
-dtype: bf16
+offload: sequential
+enable_attention_slicing: true
+enable_vae_slicing: true
+enable_vae_tiling: true

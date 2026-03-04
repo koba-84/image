@@ -26,9 +26,11 @@
 ## テスト運用（OpenSpec準拠）
 
 - PR必須（高速）:
-  - `!PYTHONPATH=/Users/ryoma/Desktop/study/image uv run --project /Users/ryoma/Desktop/study/image --python 3.12 -- pytest -m "unit or integration" -q`
+  - `!cd /content/image && PYTHONPATH=. uv run --python 3.12 -- pytest -m "unit or integration" -q`
 - 拡張（回帰・安全性含む）:
-  - `!PYTHONPATH=/Users/ryoma/Desktop/study/image uv run --project /Users/ryoma/Desktop/study/image --python 3.12 -- pytest -m "unit or integration or regression or safety" -q`
+  - `!cd /content/image && PYTHONPATH=. uv run --python 3.12 -- pytest -m "unit or integration or regression or safety" -q`
+- モデル実ロード確認（Colab GPUでの任意実行）:
+  - `!cd /content/image && PYTHONPATH=. IMAGE_AI_ENABLE_REAL_MODEL_LOAD=1 uv run --python 3.12 -- pytest tests/integration/test_real_model_loading.py -q`
 - CIリトライ付きランナー（transient failureのみ再試行）:
   - `!uv run --project /Users/ryoma/Desktop/study/image --python 3.12 -- python -c "from pathlib import Path; from image_ai.ci_test_runner import run_pytest_with_retry; raise SystemExit(run_pytest_with_retry(['pytest','-m','unit or integration','-q'], max_retries=1, log_path=Path('outputs/ci_attempts.jsonl')))"` 
 
@@ -43,29 +45,28 @@
 2. コマンド実行: `!uv run -- python -m image_ai.cli ...`  
 
 ```python
-!uv run -- python -m image_ai.cli mode=text2img memory=balanced model=sdxl_base \
+!uv run -- python -m image_ai.cli mode=text2img model=sdxl_base \
   prompt="cinematic night city, ultra detailed" \
   output=outputs/sdxl_low_vram.png \
   steps=24 guidance_scale=6.0 \
-  height=1024 width=1024 \
-  offload=model
+  height=1024 width=1024
 ```
 
 ```python
-!uv run -- python -m image_ai.cli mode=img2img memory=balanced model=sd15 \
+!uv run -- python -m image_ai.cli mode=img2img model=sd15 \
   prompt="anime style, clean lineart" \
   image=./inputs/base.png \
   output=outputs/img2img.png \
-  strength=0.55 offload=model
+  strength=0.55
 ```
 
 ```python
-!uv run -- python -m image_ai.cli mode=inpaint memory=aggressive model=sd_inpaint \
+!uv run -- python -m image_ai.cli mode=inpaint model=sd_inpaint \
   prompt="replace with red flower bouquet" \
   image=./inputs/photo.png \
   mask_image=./inputs/mask.png \
   output=outputs/inpaint.png \
-  strength=0.7 offload=sequential
+  strength=0.7
 ```
 
 実行時に `output.json` が自動保存され、モデルID・seed・主要パラメータを記録します。
@@ -114,10 +115,14 @@ closed(API) 検証候補:
 
 - Hugging Face Diffusers Memory Optimization  
   https://huggingface.co/docs/diffusers/optimization/memory
+- Hugging Face Diffusers: Loading a pipeline (`from_pretrained`)  
+  https://huggingface.co/docs/diffusers/main/en/using-diffusers/loading
 - Hugging Face Diffusers Image-to-Image  
   https://huggingface.co/docs/diffusers/main/en/using-diffusers/img2img
 - Hugging Face Diffusers Inpaint API  
   https://huggingface.co/docs/diffusers/main/en/api/pipelines/stable_diffusion/inpaint
+- pytest usage and test selection  
+  https://docs.pytest.org/en/stable/how-to/usage.html
 - uv Projects Guide  
   https://docs.astral.sh/uv/guides/projects/
 - Cookiecutter Data Science  

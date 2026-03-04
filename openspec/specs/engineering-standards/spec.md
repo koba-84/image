@@ -14,7 +14,7 @@ The project MUST enforce coding standards that prioritize reproducibility and sa
 - **THEN** the change MUST specify image format, color space, and resolution handling without implicit conversion assumptions
 
 ### Requirement: Naming conventions are explicit and consistent
-The project MUST apply a consistent naming convention based on Python best practices.
+The project MUST apply a consistent naming convention based on Python best practices and MUST prefer established official terminology when a standard name exists for the same ML operation.
 
 #### Scenario: Variables and functions follow snake_case
 - **WHEN** contributors add or modify Python code
@@ -23,6 +23,10 @@ The project MUST apply a consistent naming convention based on Python best pract
 #### Scenario: Classes and constants use dedicated styles
 - **WHEN** contributors define classes or constants
 - **THEN** classes MUST use `PascalCase` and constants MUST use `UPPER_SNAKE_CASE`
+
+#### Scenario: Standard ML terminology is prioritized
+- **WHEN** an operation has an established term in official documentation (for example Diffusers/PyTorch/pytest)
+- **THEN** contributors MUST prefer that standard term over project-local ad hoc wording for function and test naming
 
 ### Requirement: Git workflow is reviewable and traceable
 The project MUST use a Git workflow that keeps history machine-readable and reviewable.
@@ -116,4 +120,81 @@ The project MUST require OpenSpec command-driven artifact progression, delta-spe
 - **WHEN** contributors change requirements
 - **THEN** they MUST author changes in `openspec/changes/<change>/specs/`
 - **AND** they MUST merge to `openspec/specs/` via sync/archive flow
+
+### Requirement: OpenSpec artifacts MUST not depend on `.copilot/session` paths
+Active OpenSpec artifacts MUST avoid defining repository process rules that require `.copilot/session` (or equivalent session-local state paths) as part of normal project workflow.
+
+#### Scenario: Session-path dependency is rejected
+- **WHEN** proposal/design/tasks/spec artifacts for an active change are created or updated
+- **THEN** they MUST NOT require `.copilot/session` or `session-state` paths for repository workflow decisions
+
+### Requirement: Active artifacts MUST avoid stale references to archived changes
+Active OpenSpec artifacts MUST keep references focused on currently relevant specs/changes and remove unnecessary references to prior archived changes.
+
+#### Scenario: Stale historical reference is cleaned up
+- **WHEN** an active change artifact includes references to archived or superseded changes
+- **THEN** maintainers MUST remove references that are not required for current implementation or verification decisions
+
+### Requirement: Autonomous Git lifecycle MUST enforce clean checkpoints
+Autonomous contributors MUST keep the working tree auditable and avoid persistent uncommitted backlog by enforcing clean-check checkpoints.
+
+#### Scenario: Agent validates clean state before push
+- **WHEN** an agent is about to push a branch
+- **THEN** the agent MUST run `git status --short`
+- **AND** the output MUST be empty before `git push`
+
+#### Scenario: Agent validates clean state after commit series
+- **WHEN** an agent finishes the intended commit sequence for a task
+- **THEN** the agent MUST verify no unintended tracked or untracked leftovers remain
+- **AND** any remaining intended work MUST be committed in an additional scoped commit
+
+### Requirement: Autonomous commits MUST be granular and machine-readable
+Autonomous contributors MUST create small, focused commits with structured messages.
+
+#### Scenario: Commit message follows Conventional Commits
+- **WHEN** an agent creates a commit
+- **THEN** the message MUST use a valid Conventional Commits type prefix (for example `feat:`, `fix:`, `chore:`)
+
+#### Scenario: Commit scope maps to one logical change
+- **WHEN** an agent stages files for a commit
+- **THEN** staged files MUST correspond to a single logical purpose
+- **AND** unrelated edits MUST be split into separate commits
+
+#### Scenario: Agent commits at logical checkpoints
+- **WHEN** an agent completes a logical unit of work (for example one requirement/task chunk) or is about to switch context
+- **THEN** the agent MUST create a scoped commit before starting the next logical unit
+- **AND** the agent MUST NOT defer all local changes into one large end-of-session commit
+
+### Requirement: Autonomous branch integration MUST remain protected
+Autonomous contributors MUST integrate through reviewable PR flow and protected branch expectations.
+
+#### Scenario: Main integration goes through PR checks
+- **WHEN** autonomous work targets `main`
+- **THEN** integration MUST occur through Pull Request review and required checks
+- **AND** direct push to `main` MUST NOT be used
+
+#### Scenario: Branch synchronization happens before push
+- **WHEN** an agent prepares to publish local commits
+- **THEN** the agent MUST synchronize with upstream branch state
+- **AND** resolve conflicts before final push/PR update
+
+#### Scenario: Agent pushes immediately after local verification
+- **WHEN** commits for the current task scope are complete and required validation commands pass
+- **THEN** the agent MUST push that scope without unnecessary delay
+- **AND** the agent MUST avoid keeping validated commits only in local state across additional unrelated work
+
+#### Scenario: Agent pushes only review branch
+- **WHEN** an agent pushes autonomous commits
+- **THEN** the push target MUST be a non-`main` branch
+- **AND** the agent MUST verify push success from command output
+
+#### Scenario: Agent opens PR after successful push
+- **WHEN** an autonomous branch push succeeds
+- **THEN** the agent MUST open or update a Pull Request for review before mainline integration
+- **AND** the PR body MUST include executed validation commands and outcomes
+
+#### Scenario: Agent records commit and push checkpoint evidence
+- **WHEN** an agent completes a logical work unit and publishes it
+- **THEN** the agent MUST leave traceable evidence of commit timing and push timing (for example command logs or PR timeline)
+- **AND** reviewers MUST be able to verify that commit occurred at logical boundary and push occurred immediately after required validation
 

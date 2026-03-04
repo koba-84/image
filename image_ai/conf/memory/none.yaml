@@ -1,6 +1,5 @@
 # @package _global_
-low_vram_preset: none
-offload: model
+offload: none
 enable_attention_slicing: false
 enable_vae_slicing: false
 enable_vae_tiling: false

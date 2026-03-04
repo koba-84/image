@@ -26,3 +26,25 @@ Spec additions/modifications MUST be authored in `openspec/changes/<change>/spec
 - **WHEN** a change is finalized or synced
 - **THEN** contributors MUST use `/opsx:sync` or `/opsx:archive` (or equivalent CLI lifecycle commands) to merge delta specs into `openspec/specs/`
 
+### Requirement: Specification purpose MUST be explicit and non-placeholder
+OpenSpec source-of-truth specs MUST include a concrete purpose statement and MUST NOT use placeholders such as `TBD`.
+
+#### Scenario: New or updated spec is reviewed
+- **WHEN** a contributor creates or updates `openspec/specs/*/spec.md`
+- **THEN** the `Purpose` section MUST describe the capability intent in concrete terms
+- **AND** placeholder text (for example `TBD`) MUST be rejected in review
+
+### Requirement: Archive lifecycle checks MUST be standardized
+OpenSpec archive operations MUST follow a standard sequence of verification, archive execution, and post-check.
+
+#### Scenario: Standard archive sequence is executed
+- **WHEN** a contributor finalizes a completed change
+- **THEN** they MUST run `openspec status --change "<name>"`
+- **AND** they MUST run `openspec archive <name> --yes`
+- **AND** they MUST confirm archived path under `openspec/changes/archive/`
+
+#### Scenario: Post-archive verification is recorded
+- **WHEN** archive execution completes
+- **THEN** contributors MUST run `openspec validate --changes --strict`
+- **AND** they MUST record command outcomes in PR description or work log
+
