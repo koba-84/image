@@ -1,0 +1,69 @@
+{
+  "policy": {
+    "one_model_per_family": true,
+    "require_research_evidence": true,
+    "include_closed_api_models": true
+  },
+  "open_weight_models": [
+    {
+      "family": "qwen-image",
+      "model_id": "Qwen/Qwen-Image-2512",
+      "evidence": "Tech report + AI Arena 10k+ blind evaluations"
+    },
+    {
+      "family": "hidream-i1",
+      "model_id": "HiDream-ai/HiDream-I1-Full",
+      "evidence": "DPG-Bench/GenEval/HPSv2.1 reported on model card"
+    },
+    {
+      "family": "cogview4",
+      "model_id": "zai-org/CogView4-6B",
+      "evidence": "DPG-Bench/GenEval/T2I-CompBench reported on model card"
+    },
+    {
+      "family": "janus-pro",
+      "model_id": "deepseek-ai/Janus-Pro-7B",
+      "evidence": "Janus-Pro paper (arXiv:2501.17811)"
+    },
+    {
+      "family": "glm-4.1v",
+      "model_id": "zai-org/GLM-4.1V-9B-Thinking",
+      "evidence": "GLM-4.1V-Thinking paper + multi-benchmark report"
+    },
+    {
+      "family": "flux1",
+      "model_id": "black-forest-labs/FLUX.1-schnell",
+      "evidence": "Official release with benchmark/perf claims"
+    },
+    {
+      "family": "sdxl-lightning",
+      "model_id": "ByteDance/SDXL-Lightning",
+      "evidence": "SDXL-Lightning paper (arXiv:2402.13929)"
+    },
+    {
+      "family": "hunyuan-dit",
+      "model_id": "Tencent-Hunyuan/HunyuanDiT-v1.2-Diffusers",
+      "evidence": "Hunyuan-DiT paper + evaluator study"
+    }
+  ],
+  "closed_api_models": [
+    {
+      "family": "openai-image",
+      "model_id": "openai:gpt-image-1",
+      "provider": "OpenAI",
+      "api_reference": "https://platform.openai.com/docs/guides/image-generation"
+    },
+    {
+      "family": "google-imagen",
+      "model_id": "google:imagen-3.0-generate-002",
+      "provider": "Google Vertex AI",
+      "api_reference": "https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview"
+    },
+    {
+      "family": "ideogram",
+      "model_id": "ideogram:v2",
+      "provider": "Ideogram",
+      "api_reference": "https://developer.ideogram.ai/"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+# @package _global_
+controlnet_enabled: true
+controlnet_model_id: lllyasviel/sd-controlnet-canny
+controlnet_conditioning_scale: 1.0
+controlnet_image: null
