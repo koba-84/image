@@ -50,6 +50,8 @@ def test_save_inference_metadata_contains_runtime_environment_fields(tmp_path) -
     metadata = json.loads(output.with_suffix(".json").read_text(encoding="utf-8"))
 
     assert metadata["model_id"] == "dummy-model"
+    assert metadata["backend"] == "local"
+    assert metadata["provider"] is None
     assert metadata["seed"] == 42
     assert "runtime_environment" in metadata
     assert metadata["runtime_environment"]["python_version"]

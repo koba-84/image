@@ -53,6 +53,14 @@
 ```
 
 ```python
+!OPENAI_API_KEY=... uv run -- python -m image_ai.cli mode=text2img \
+  model_id=openai:gpt-image-1 \
+  prompt="minimal poster, high contrast, black and white" \
+  output=outputs/openai_text2img.png \
+  width=1024 height=1024
+```
+
+```python
 !uv run -- python -m image_ai.cli mode=img2img model=sd15 \
   prompt="anime style, clean lineart" \
   image=./inputs/base.png \
