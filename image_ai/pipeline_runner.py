@@ -5,6 +5,7 @@ import json
 import os
 import platform
 from dataclasses import dataclass
+from math import gcd
 from io import BytesIO
 from pathlib import Path
 from sys import version as python_version
@@ -86,15 +87,152 @@ class OpenAIImageAPIBackend:
             data = json.loads(res.read().decode("utf-8"))
 
         first = data.get("data", [{}])[0]
-        if "b64_json" in first:
-            image_bytes = base64.b64decode(first["b64_json"])
-        elif "url" in first:
-            with urllib_request.urlopen(first["url"]) as image_res:
-                image_bytes = image_res.read()
-        else:
-            raise RuntimeError("OpenAI image response did not include b64_json or url.")
-
+        image_bytes = _extract_image_bytes(first, "openai")
         return Image.open(BytesIO(image_bytes)).convert("RGB")
+
+
+class GoogleImagenAPIBackend:
+    is_api_backend = True
+    provider = "google"
+
+    def __init__(self, model_name: str) -> None:
+        self.model_name = model_name
+
+    def generate(self, config: RuntimeConfig) -> Image.Image:
+        if config.mode != "text2img":
+            raise NotImplementedError(
+                "API backend currently supports only text2img mode."
+            )
+        access_token = os.getenv("GOOGLE_VERTEX_ACCESS_TOKEN")
+        project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+        location = os.getenv("GOOGLE_CLOUD_LOCATION")
+        missing = [
+            name
+            for name, value in (
+                ("GOOGLE_VERTEX_ACCESS_TOKEN", access_token),
+                ("GOOGLE_CLOUD_PROJECT", project_id),
+                ("GOOGLE_CLOUD_LOCATION", location),
+            )
+            if not value
+        ]
+        if missing:
+            raise RuntimeError(
+                f"Missing required Google Vertex env vars: {', '.join(missing)}"
+            )
+
+        endpoint = config.api_base_url or (
+            "https://"
+            f"{location}-aiplatform.googleapis.com/v1/projects/{project_id}/locations/{location}"
+            f"/publishers/google/models/{self.model_name}:predict"
+        )
+
+        parameters: dict[str, Any] = {"sampleCount": 1, "seed": config.seed}
+        if config.width is not None and config.height is not None:
+            parameters["aspectRatio"] = _to_aspect_ratio(config.width, config.height)
+
+        payload = {
+            "instances": [{"prompt": config.prompt}],
+            "parameters": parameters,
+        }
+        req = urllib_request.Request(
+            endpoint,
+            data=json.dumps(payload).encode("utf-8"),
+            method="POST",
+            headers={
+                "Authorization": f"Bearer {access_token}",
+                "Content-Type": "application/json",
+            },
+        )
+        with urllib_request.urlopen(req) as res:
+            data = json.loads(res.read().decode("utf-8"))
+
+        first = data.get("predictions", [{}])[0]
+        image_bytes = _extract_image_bytes(first, "google")
+        return Image.open(BytesIO(image_bytes)).convert("RGB")
+
+
+class IdeogramAPIBackend:
+    is_api_backend = True
+    provider = "ideogram"
+
+    def __init__(self, model_name: str) -> None:
+        self.model_name = model_name
+
+    def generate(self, config: RuntimeConfig) -> Image.Image:
+        if config.mode != "text2img":
+            raise NotImplementedError(
+                "API backend currently supports only text2img mode."
+            )
+        api_key = os.getenv("IDEOGRAM_API_KEY")
+        if not api_key:
+            raise RuntimeError("IDEOGRAM_API_KEY is required for ideogram API backend.")
+
+        endpoint = config.api_base_url or "https://api.ideogram.ai/generate"
+        image_request: dict[str, Any] = {
+            "prompt": config.prompt,
+            "model": _to_ideogram_model(self.model_name),
+        }
+        if config.width is not None and config.height is not None:
+            image_request["aspect_ratio"] = _to_aspect_ratio(config.width, config.height)
+        payload = {"image_request": image_request}
+
+        req = urllib_request.Request(
+            endpoint,
+            data=json.dumps(payload).encode("utf-8"),
+            method="POST",
+            headers={"Api-Key": api_key, "Content-Type": "application/json"},
+        )
+        with urllib_request.urlopen(req) as res:
+            data = json.loads(res.read().decode("utf-8"))
+
+        first = data.get("data", [{}])[0]
+        image_bytes = _extract_image_bytes(first, "ideogram")
+        return Image.open(BytesIO(image_bytes)).convert("RGB")
+
+
+def _to_ideogram_model(model_name: str) -> str:
+    normalized = model_name.strip().lower()
+    if normalized == "v2":
+        return "V_2"
+    if normalized == "v1":
+        return "V_1"
+    return model_name
+
+
+def _to_aspect_ratio(width: int, height: int) -> str:
+    ratio = gcd(width, height)
+    return f"{width // ratio}:{height // ratio}"
+
+
+def _extract_image_bytes(item: dict[str, Any], provider: str) -> bytes:
+    if "b64_json" in item:
+        return base64.b64decode(item["b64_json"])
+    if "bytesBase64Encoded" in item:
+        return base64.b64decode(item["bytesBase64Encoded"])
+    if "base64" in item:
+        return base64.b64decode(item["base64"])
+
+    image_obj = item.get("image")
+    if isinstance(image_obj, dict):
+        if "b64_json" in image_obj:
+            return base64.b64decode(image_obj["b64_json"])
+        if "base64" in image_obj:
+            return base64.b64decode(image_obj["base64"])
+        if "url" in image_obj:
+            return _fetch_image_bytes(image_obj["url"])
+
+    for url_key in ("url", "image_url"):
+        if url_key in item:
+            return _fetch_image_bytes(item[url_key])
+
+    raise RuntimeError(
+        f"{provider} image response did not include base64 or image url payload."
+    )
+
+
+def _fetch_image_bytes(url: str) -> bytes:
+    with urllib_request.urlopen(url) as image_res:
+        return image_res.read()
 
 
 def select_torch_device(raw: str) -> str:
@@ -120,6 +258,10 @@ def load_pipeline_for_mode(mode: Mode, model_id: str, dtype: torch.dtype) -> Any
     if backend.backend == "api":
         if backend.provider == "openai":
             return OpenAIImageAPIBackend(backend.model_name)
+        if backend.provider == "google":
+            return GoogleImagenAPIBackend(backend.model_name)
+        if backend.provider == "ideogram":
+            return IdeogramAPIBackend(backend.model_name)
         raise NotImplementedError(
             f"API provider '{backend.provider}' is not supported yet."
         )

@@ -6,7 +6,7 @@
 ## 2. Backend Routing Implementation
 
 - [x] 2.1 `model_id` から local/api を判定するルーティング処理を追加する
-- [x] 2.2 `openai:<model>` の text2img API実行経路を追加する
+- [x] 2.2 `openai:<model>` / `google:<model>` / `ideogram:<model>` の text2img API実行経路を追加する
 - [x] 2.3 APIキー不足・未対応modeのエラーを明示化する
 
 ## 3. Metadata and Tests

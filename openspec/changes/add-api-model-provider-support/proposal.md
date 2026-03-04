@@ -5,7 +5,7 @@
 ## What Changes
 
 - `model_id` 文字列から実行バックエンド（local / api）を自動判定する
-- `openai:<model>` 形式の API モデルを text2img で実行可能にする
+- `openai:<model>` / `google:<model>` / `ideogram:<model>` 形式の API モデルを text2img で実行可能にする
 - API実行時の認証・エラー・メタデータ記録要件を追加する
 - APIバックエンド向けのユニットテストを追加する
 

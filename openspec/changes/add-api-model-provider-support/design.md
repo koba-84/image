@@ -6,7 +6,7 @@
 
 **Goals:**
 - `model_id` から local/api を判定する
-- `openai:<model>` で text2img 実行を可能にする
+- `openai:<model>` / `google:<model>` / `ideogram:<model>` で text2img 実行を可能にする
 - APIキー未設定時に明確なエラーを返す
 - 実行メタデータに backend/provider を残す
 
@@ -17,7 +17,7 @@
 
 ## Decisions
 
-1. `model_id` の接頭辞でバックエンドを判定する（`openai:` は API、それ以外は local）。
+1. `model_id` の接頭辞でバックエンドを判定する（`openai:` / `google:` / `ideogram:` は API、それ以外は local）。
 - 理由: 既存設定との互換性を保ちながら実装変更を最小化できるため。
 
 2. APIクライアントは `pipeline_runner.py` に小さな内部クラスとして実装し、CLIの呼び出し順序は維持する。
@@ -28,7 +28,7 @@
 
 ## Risks / Trade-offs
 
-- [Risk] API仕様差分でレスポンス形式が揺れる → [Mitigation] `b64_json` / `url` の両形式を受ける実装にする
+- [Risk] API仕様差分でレスポンス形式が揺れる → [Mitigation] `b64_json` / `bytesBase64Encoded` / `url` を許容する正規化層を用意する
 - [Risk] 環境変数依存で実行失敗しやすい → [Mitigation] 不足時に必須env名を含むエラーを返す
 
 ## Migration Plan
