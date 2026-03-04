@@ -1,0 +1,8 @@
+# @package _global_
+model_variant: sd15
+model_id: stable-diffusion-v1-5/stable-diffusion-v1-5
+steps: 28
+guidance_scale: 7.0
+height: null
+width: null
+strength: 0.65

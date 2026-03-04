@@ -1,0 +1,8 @@
+# @package _global_
+model_variant: sdxl_base
+model_id: stabilityai/stable-diffusion-xl-base-1.0
+steps: 28
+guidance_scale: 7.0
+height: null
+width: null
+strength: 0.65

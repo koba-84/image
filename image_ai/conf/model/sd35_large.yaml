@@ -1,0 +1,8 @@
+# @package _global_
+model_variant: sd35_large
+model_id: stabilityai/stable-diffusion-3.5-large
+steps: 28
+guidance_scale: 4.5
+height: null
+width: null
+strength: 0.65

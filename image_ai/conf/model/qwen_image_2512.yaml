@@ -1,0 +1,9 @@
+# @package _global_
+model_variant: qwen_image_2512
+model_id: Qwen/Qwen-Image-2512
+steps: 50
+guidance_scale: 4.0
+height: null
+width: null
+strength: 0.65
+dtype: bf16

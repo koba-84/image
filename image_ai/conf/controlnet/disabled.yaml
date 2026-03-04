@@ -1,0 +1,5 @@
+# @package _global_
+controlnet_enabled: false
+controlnet_model_id: null
+controlnet_conditioning_scale: 1.0
+controlnet_image: null

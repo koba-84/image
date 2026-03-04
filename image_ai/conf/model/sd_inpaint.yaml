@@ -1,0 +1,8 @@
+# @package _global_
+model_variant: sd_inpaint
+model_id: runwayml/stable-diffusion-inpainting
+steps: 28
+guidance_scale: 7.0
+height: null
+width: null
+strength: 0.65
