@@ -9,6 +9,7 @@ Current Git operations are not autonomous enough to keep the working tree clean,
   - branch protection expectations for `main`
   - small, structured commits with Conventional Commits format
   - mandatory "working tree clean" checks before push/PR completion
+  - explicit autonomous push success verification and PR creation/update after push
 - Define task-level verification so the team can repeatedly apply this workflow and avoid uncommitted backlog.
 
 ## Web References

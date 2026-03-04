@@ -12,6 +12,8 @@ The repository already requires PR-based integration and conventional commit for
    - Rationale: `git status --short` empty state before push/PR close prevents hidden local leftovers.
 4. Require pre-push synchronization and conflict resolution workflow.
    - Rationale: Workflow guidance from common Git team practices reduces integration surprises.
+5. Require autonomous push success verification and immediate PR creation/update.
+   - Rationale: autonomous execution must complete publish/review handoff, not stop at local commits.
 
 ## Risks / Trade-offs
 
@@ -22,7 +24,7 @@ The repository already requires PR-based integration and conventional commit for
 
 1. Add delta requirements in the active change spec for autonomous Git operations and clean-tree checkpoints.
 2. Add concrete tasks to operationalize required checks and evidence.
-3. Validate OpenSpec artifacts and then apply workflow by creating commits until local uncommitted backlog is removed.
+3. Validate OpenSpec artifacts and then apply workflow by creating commits, pushing the branch, and creating/updating PR evidence.
 
 ## References
 

@@ -37,3 +37,13 @@ Autonomous contributors MUST integrate through reviewable PR flow and protected 
 - **WHEN** an agent prepares to publish local commits
 - **THEN** the agent MUST synchronize with upstream branch state
 - **AND** resolve conflicts before final push/PR update
+
+#### Scenario: Agent pushes only review branch
+- **WHEN** an agent pushes autonomous commits
+- **THEN** the push target MUST be a non-`main` branch
+- **AND** the agent MUST verify push success from command output
+
+#### Scenario: Agent opens PR after successful push
+- **WHEN** an autonomous branch push succeeds
+- **THEN** the agent MUST open or update a Pull Request for review before mainline integration
+- **AND** the PR body MUST include executed validation commands and outcomes
