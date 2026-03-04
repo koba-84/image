@@ -25,6 +25,11 @@ Autonomous contributors MUST create small, focused commits with structured messa
 - **THEN** staged files MUST correspond to a single logical purpose
 - **AND** unrelated edits MUST be split into separate commits
 
+#### Scenario: Agent commits at logical checkpoints
+- **WHEN** an agent completes a logical unit of work (for example one requirement/task chunk) or is about to switch context
+- **THEN** the agent MUST create a scoped commit before starting the next logical unit
+- **AND** the agent MUST NOT defer all local changes into one large end-of-session commit
+
 ### Requirement: Autonomous branch integration MUST remain protected
 Autonomous contributors MUST integrate through reviewable PR flow and protected branch expectations.
 
@@ -37,6 +42,11 @@ Autonomous contributors MUST integrate through reviewable PR flow and protected 
 - **WHEN** an agent prepares to publish local commits
 - **THEN** the agent MUST synchronize with upstream branch state
 - **AND** resolve conflicts before final push/PR update
+
+#### Scenario: Agent pushes immediately after local verification
+- **WHEN** commits for the current task scope are complete and required validation commands pass
+- **THEN** the agent MUST push that scope without unnecessary delay
+- **AND** the agent MUST avoid keeping validated commits only in local state across additional unrelated work
 
 #### Scenario: Agent pushes only review branch
 - **WHEN** an agent pushes autonomous commits
