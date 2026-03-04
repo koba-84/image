@@ -7,7 +7,6 @@ from omegaconf import DictConfig
 
 from image_ai.config import build_runtime_config
 from image_ai.pipeline_runner import (
-    apply_low_vram_optimizations,
     configure_diffusers_pipeline,
     load_pipeline_for_mode,
     run_inference,
@@ -20,9 +19,8 @@ from image_ai.pipeline_runner import (
 @hydra.main(version_base=None, config_path="conf", config_name="config")
 def main(cfg: DictConfig) -> None:
     runtime_config = build_runtime_config(cfg)
-    apply_low_vram_optimizations(runtime_config)
     device = select_torch_device(runtime_config.device)
-    dtype = select_torch_dtype(runtime_config.dtype, device)
+    dtype = select_torch_dtype(device)
     pipe = load_pipeline_for_mode(runtime_config.mode, runtime_config.model_id, dtype)
     configure_diffusers_pipeline(pipe, runtime_config, device)
     result = run_inference(pipe, runtime_config)

@@ -24,28 +24,12 @@ def select_torch_device(raw: str) -> str:
     return "cpu"
 
 
-def select_torch_dtype(raw: str, device: str) -> torch.dtype:
-    if raw == "fp16":
-        return torch.float16
-    if raw == "bf16":
-        return torch.bfloat16
-    if raw == "fp32":
-        return torch.float32
+def select_torch_dtype(device: str) -> torch.dtype:
     if device == "cuda":
         return torch.float16
     if device == "cpu":
         return torch.float32
     return torch.float16
-
-
-def apply_low_vram_optimizations(config: RuntimeConfig) -> None:
-    if config.low_vram_preset == "none":
-        return
-    config.enable_attention_slicing = True
-    config.enable_vae_slicing = True
-    if config.low_vram_preset == "aggressive":
-        config.enable_vae_tiling = True
-        config.offload = "sequential"
 
 
 def load_pipeline_for_mode(mode: Mode, model_id: str, dtype: torch.dtype) -> Any:
@@ -163,7 +147,6 @@ def save_inference_metadata(
         "vae_tiling": config.enable_vae_tiling,
         "xformers": config.enable_xformers,
         "channels_last": config.enable_channels_last,
-        "low_vram_preset": config.low_vram_preset,
         "controlnet_enabled": config.controlnet_enabled,
         "controlnet_model_id": config.controlnet_model_id,
         "controlnet_conditioning_scale": config.controlnet_conditioning_scale,

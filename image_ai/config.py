@@ -26,14 +26,12 @@ class RuntimeConfig:
     image: str | None = None
     mask_image: str | None = None
     device: Literal["auto", "cuda", "mps", "cpu"] = "auto"
-    dtype: Literal["auto", "fp16", "bf16", "fp32"] = "auto"
     offload: Literal["none", "model", "sequential"] = "model"
     enable_attention_slicing: bool = False
     enable_vae_slicing: bool = False
     enable_vae_tiling: bool = False
     enable_xformers: bool = False
     enable_channels_last: bool = False
-    low_vram_preset: Literal["none", "balanced", "aggressive"] = "balanced"
     controlnet_enabled: bool = False
     controlnet_model_id: str | None = None
     controlnet_conditioning_scale: float = 1.0

@@ -1,7 +1,6 @@
 defaults:
   - _self_
   - mode: text2img
-  - memory: balanced
   - model: sdxl_base
   - controlnet: disabled
 
@@ -12,7 +11,6 @@ seed: 42
 image: null
 mask_image: null
 device: auto
-dtype: auto
 enable_xformers: false
 enable_channels_last: false
 hydra:

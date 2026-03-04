@@ -6,3 +6,7 @@ guidance_scale: 7.0
 height: null
 width: null
 strength: 0.65
+offload: sequential
+enable_attention_slicing: true
+enable_vae_slicing: true
+enable_vae_tiling: true
