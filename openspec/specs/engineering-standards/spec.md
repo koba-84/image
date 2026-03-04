@@ -1,5 +1,7 @@
-## ADDED Requirements
+## Purpose
 
+Define enforceable engineering standards for reproducibility, safety, and traceable Git operations in this image AI project.
+## Requirements
 ### Requirement: Coding standards are reproducibility-first
 The project MUST enforce coding standards that prioritize reproducibility and safe image processing for image generation/editing experiments.
 
@@ -66,3 +68,52 @@ The project MUST update OpenSpec artifacts before implementation when behavior o
 #### Scenario: Spec-impacting change starts
 - **WHEN** a contributor plans a change that affects behavior, quality gates, or process rules
 - **THEN** proposal/design/tasks/spec artifacts MUST be updated before or alongside implementation tasks
+
+### Requirement: OpenSpec is authoritative for behavior requirements
+The project MUST treat OpenSpec specs and active change artifacts as the authoritative source for behavior and process requirements.
+
+#### Scenario: Instruction conflict is detected
+- **WHEN** repository instructions (for example AGENTS or tool guidance files) conflict with OpenSpec artifacts
+- **THEN** contributors MUST follow OpenSpec artifacts
+- **AND** update the conflicting instruction files so they become operational guidance consistent with OpenSpec
+
+### Requirement: Execution fallback handling is explicit
+The project MUST define a fallback workflow for cases where an agent cannot complete work as expected.
+
+#### Scenario: Agent investigates capability before escalation
+- **WHEN** an agent cannot complete a requested task with the current approach
+- **THEN** the agent MUST investigate available skills, tools, and project instructions, and retry with a better approach before asking for escalation
+
+#### Scenario: Blockers are escalated with traceable context
+- **WHEN** an agent still cannot proceed after capability investigation and retry
+- **THEN** the agent MUST report the blocker, attempted investigation/retry steps, and the specific missing requirement or dependency
+
+### Requirement: Model selection governance is explicit and auditable
+The project MUST keep model selection criteria explicit, version-deduplicated by family, and auditable across open-weight and closed API candidates.
+
+#### Scenario: One model per family is enforced
+- **WHEN** model candidates are documented or refreshed
+- **THEN** only one active model per family MUST be listed, preferring the latest and strongest evidence-backed variant
+
+#### Scenario: Candidate coverage is periodically verified
+- **WHEN** candidate models are reviewed
+- **THEN** maintainers MUST run a reproducible audit that checks for missing high-signal families and reports gaps
+
+#### Scenario: Closed API models are included in verification
+- **WHEN** model coverage is audited
+- **THEN** the audit MUST include closed API candidates with provider, model identifier, and API reference metadata
+
+### Requirement: OpenSpec authoring workflow MUST be explicit and validated
+The project MUST require OpenSpec command-driven artifact progression, delta-spec-first authoring, and pre-implementation workflow checks for every active change.
+
+#### Scenario: Pre-implementation checks are enforced
+- **WHEN** a contributor prepares to implement a change
+- **THEN** they MUST run `openspec status --change "<name>" --json`
+- **AND** they MUST run `openspec instructions apply --change "<name>" --json`
+- **AND** they MUST run `openspec validate --changes --strict --json`
+
+#### Scenario: Spec changes use delta flow
+- **WHEN** contributors change requirements
+- **THEN** they MUST author changes in `openspec/changes/<change>/specs/`
+- **AND** they MUST merge to `openspec/specs/` via sync/archive flow
+

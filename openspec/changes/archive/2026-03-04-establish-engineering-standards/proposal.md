@@ -19,6 +19,6 @@
 
 ## Impact
 
-- Affected area: `openspec/config.yaml`, `openspec/changes/establish-engineering-standards/*`
+- Affected area: `openspec/config.yaml`, `openspec/changes/archive/2026-03-04-establish-engineering-standards/*`
 - Process impact: 仕様/設計/実装タスク作成時に規約準拠が標準フローになる
 - Risk reduction: 再現不能実験、曖昧なコミット履歴、レビュー漏れ、過剰権限トークン運用を低減する
